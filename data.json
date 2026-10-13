@@ -1,0 +1,13 @@
+{
+    "tasks": [
+        {
+            "id": 1,
+            "title": "Projek Alpro",
+            "subject": "Algoritma Pemrogramman",
+            "deadline": "2026-10-23",
+            "priority": "Tinggi",
+            "completed": false
+        }
+    ],
+    "schedule": []
+}

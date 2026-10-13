@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow | Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+        <a href="#overview" class="brand">
+            <span class="brand-icon">S</span>
+            <span>StudyFlow</span>
+        </a>
+
+        <p class="nav-label">MENU UTAMA</p>
+        <nav class="nav-menu">
+            <a href="#overview" class="nav-link active" data-page="overview">
+                <span>▦</span> Dashboard
+            </a>
+            <a href="#tasks" class="nav-link" data-page="tasks">
+                <span>☑</span> Daftar Tugas
+            </a>
+            <a href="#schedule" class="nav-link" data-page="schedule">
+                <span>▣</span> Jadwal Kuliah
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="profile-avatar">M</div>
+            <div class="profile-info">
+                <strong>Mahasiswa</strong>
+                <span>Student Account</span>
+            </div>
+            <span class="profile-dot"></span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button id="menuButton" class="menu-button" aria-label="Buka menu">☰</button>
+            <div>
+                <p class="eyebrow">STUDENT WORKSPACE</p>
+                <h1 id="pageTitle">Dashboard</h1>
+            </div>
+            <div class="topbar-date" id="currentDate"></div>
+        </header>
+
+        <section id="overview" class="page-section">
+            <div class="welcome-banner">
+                <div>
+                    <span class="welcome-tag">YOUR STUDY SPACE</span>
+                    <h2>Halo, Mahasiswa! 👋</h2>
+                    <p>Atur tugasmu, kelola jadwal, dan capai target belajarmu.</p>
+                </div>
+                <div class="banner-art" aria-hidden="true">✦</div>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Ringkasan Aktivitas</h2>
+                    <p>Pantau produktivitas belajarmu hari ini.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Tugas</span>
+                        <span class="stat-icon purple">▤</span>
+                    </div>
+                    <strong id="totalTasks">0</strong>
+                    <small>Semua tugas tercatat</small>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Belum Selesai</span>
+                        <span class="stat-icon orange">◷</span>
+                    </div>
+                    <strong id="pendingTasks">0</strong>
+                    <small>Masih perlu dikerjakan</small>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Tugas Selesai</span>
+                        <span class="stat-icon green">✓</span>
+                    </div>
+                    <strong id="completedTasks">0</strong>
+                    <small>Bagus, teruskan!</small>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Terlambat</span>
+                        <span class="stat-icon red">!</span>
+                    </div>
+                    <strong id="overdueTasks">0</strong>
+                    <small>Lewat dari deadline</small>
+                </article>
+            </div>
+
+            <div class="content-grid">
+                <article class="panel progress-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Progress Belajar</h3>
+                            <p>Persentase tugas yang selesai</p>
+                        </div>
+                        <span class="stat-icon purple">↗</span>
+                    </div>
+                    <div class="progress-summary">
+                        <strong id="progressPercent">0%</strong>
+                        <span id="progressCaption">Ayo mulai belajar!</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="progressBar" class="progress-fill"></div>
+                    </div>
+                    <p class="muted" id="progressDetail">0 dari 0 tugas selesai</p>
+                </article>
+
+                <article class="panel quick-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Akses Cepat</h3>
+                            <p>Mulai aktivitasmu</p>
+                        </div>
+                    </div>
+                    <button class="quick-action" id="quickAddTask">
+                        <span class="quick-icon purple">＋</span>
+                        <span><strong>Tambah Tugas</strong><small>Catat pekerjaan baru</small></span>
+                        <span class="arrow">→</span>
+                    </button>
+                    <button class="quick-action" id="quickAddSchedule">
+                        <span class="quick-icon green">▦</span>
+                        <span><strong>Tambah Jadwal</strong><small>Atur jadwal kuliah</small></span>
+                        <span class="arrow">→</span>
+                    </button>
+                </article>
+            </div>
+
+            <article class="panel task-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Tugas Terbaru</h3>
+                        <p>Daftar tugas yang perlu kamu perhatikan</p>
+                    </div>
+                    <button class="text-button" data-go="tasks">Lihat semua →</button>
+                </div>
+                <div id="recentTasks" class="task-list"></div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Jadwal Kuliah</h3>
+                        <p>Semua jadwal yang kamu simpan</p>
+                    </div>
+                    <button class="text-button" data-go="schedule">Lihat semua →</button>
+                </div>
+                <div id="overviewSchedule" class="schedule-list"></div>
+            </article>
+        </section>
+
+        <section id="tasks" class="page-section hidden">
+            <div class="section-heading page-heading">
+                <div>
+                    <h2>Daftar Tugas</h2>
+                    <p>Kelola semua tugas kuliahmu dalam satu tempat.</p>
+                </div>
+                <button class="primary-button" id="addTaskButton">＋ Tambah Tugas</button>
+            </div>
+            <div class="filter-row">
+                <input type="search" id="taskSearch" placeholder="Cari tugas atau mata kuliah...">
+                <select id="taskFilter" aria-label="Filter tugas">
+                    <option value="all">Semua tugas</option>
+                    <option value="pending">Belum selesai</option>
+                    <option value="completed">Selesai</option>
+                    <option value="overdue">Terlambat</option>
+                </select>
+            </div>
+            <article class="panel">
+                <div id="allTasks" class="task-list"></div>
+            </article>
+        </section>
+
+        <section id="schedule" class="page-section hidden">
+            <div class="section-heading page-heading">
+                <div>
+                    <h2>Jadwal Kuliah</h2>
+                    <p>Atur hari dan waktu perkuliahanmu.</p>
+                </div>
+                <button class="primary-button" id="addScheduleButton">＋ Tambah Jadwal</button>
+            </div>
+            <article class="panel">
+                <div id="allSchedule" class="schedule-list"></div>
+            </article>
+        </section>
+    </main>
+</div>
+
+<div class="modal-backdrop hidden" id="taskModal">
+    <div class="modal">
+        <div class="modal-heading">
+            <div>
+                <h2>Tambah Tugas</h2>
+                <p>Lengkapi informasi tugas kuliahmu.</p>
+            </div>
+            <button class="close-button" data-close="taskModal" aria-label="Tutup">×</button>
+        </div>
+        <form id="taskForm">
+            <label for="taskTitle">Nama tugas *</label>
+            <input id="taskTitle" name="title" maxlength="120" required placeholder="Contoh: Laporan praktikum">
+            <label for="taskSubject">Mata kuliah</label>
+            <input id="taskSubject" name="subject" maxlength="80" placeholder="Contoh: Algoritma dan Pemrograman">
+            <label for="taskDeadline">Deadline</label>
+            <input id="taskDeadline" name="deadline" type="date">
+            <label for="taskPriority">Prioritas</label>
+            <select id="taskPriority" name="priority">
+                <option>Rendah</option>
+                <option selected>Sedang</option>
+                <option>Tinggi</option>
+            </select>
+            <div class="modal-actions">
+                <button type="button" class="secondary-button" data-close="taskModal">Batal</button>
+                <button type="submit" class="primary-button">Simpan Tugas</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-backdrop hidden" id="scheduleModal">
+    <div class="modal">
+        <div class="modal-heading">
+            <div>
+                <h2>Tambah Jadwal</h2>
+                <p>Masukkan informasi perkuliahan.</p>
+            </div>
+            <button class="close-button" data-close="scheduleModal" aria-label="Tutup">×</button>
+        </div>
+        <form id="scheduleForm">
+            <label for="scheduleSubject">Nama mata kuliah *</label>
+            <input id="scheduleSubject" name="subject" maxlength="100" required placeholder="Contoh: Fisika">
+            <label for="scheduleDay">Hari</label>
+            <select id="scheduleDay" name="day">
+                <option>Senin</option><option>Selasa</option>
+                <option>Rabu</option><option>Kamis</option>
+                <option>Jumat</option><option>Sabtu</option><option>Minggu</option>
+            </select>
+            <div class="form-row">
+                <div>
+                    <label for="scheduleStart">Jam mulai</label>
+                    <input id="scheduleStart" name="start" type="time" required value="08:00">
+                </div>
+                <div>
+                    <label for="scheduleEnd">Jam selesai</label>
+                    <input id="scheduleEnd" name="end" type="time" required value="10:00">
+                </div>
+            </div>
+            <label for="scheduleLocation">Ruangan / lokasi</label>
+            <input id="scheduleLocation" name="location" maxlength="80" placeholder="Contoh: Gedung A, Ruang 201">
+            <div class="modal-actions">
+                <button type="button" class="secondary-button" data-close="scheduleModal">Batal</button>
+                <button type="submit" class="primary-button">Simpan Jadwal</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
